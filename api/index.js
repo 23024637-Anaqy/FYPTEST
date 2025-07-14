@@ -21,7 +21,6 @@ async function connectDB() {
             
             // Disable Mongoose buffering for serverless
             mongoose.set('bufferCommands', false);
-            mongoose.set('bufferMaxEntries', 0);
             
             await mongoose.connect(process.env.MONGODB_URI, {
                 useNewUrlParser: true,

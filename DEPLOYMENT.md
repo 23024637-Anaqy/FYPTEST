@@ -293,19 +293,42 @@ Your Lakers Inventory Management System is now:
 
 ## 🔍 **Runtime Logs & Debugging** 
 
-### **✅ Current Status: MONGODB CONNECTION FIXES DEPLOYED**
+### **✅ Current Status: MONGODB OPTIONS FIXED**
 
-**Latest Runtime Log (2025-07-14T16:09:22.608Z):**
+**Latest Runtime Log (2025-07-14T16:17:31.533Z):**
 ```
 [info] [dotenv@17.2.0] injecting env (7) from .env ✅
-[error] Login error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms ❌
+[info] 🔄 Connecting to MongoDB Atlas... ✅
+[error] ❌ MongoDB connection error: MongoParseError: option buffermaxentries is not supported ❌
 ```
 
 **Progress Analysis:**
-- ✅ **Module imports working** - No more "Cannot find module" errors
-- ✅ **Environment variables loading** - `.env` with 7 variables detected
-- ✅ **Authentication endpoint reached** - Getting to database queries
-- 🔧 **MongoDB timeout issue** - Connection timing out in serverless environment
+- ✅ **Environment variables working** - All 7 variables loaded correctly
+- ✅ **MongoDB connection attempt started** - Getting to database connection
+- ✅ **Module imports working** - No path issues
+- 🔧 **MongoDB option error** - `bufferMaxEntries` not supported in this MongoDB version
+
+#### **4. MongoDB Connection Options** ✅ **FIXED**
+- **Problem**: MongoDB driver doesn't support `bufferMaxEntries` option in connection string
+- **Error**: `MongoParseError: option buffermaxentries is not supported`
+- **Solution**: Separated MongoDB driver options from Mongoose options:
+  ```javascript
+  // Set Mongoose options separately
+  mongoose.set('bufferCommands', false);
+  mongoose.set('bufferMaxEntries', 0);
+  
+  // Clean MongoDB connection options
+  await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    maxPoolSize: 10,
+    minPoolSize: 5,
+    maxIdleTimeMS: 30000,
+    family: 4
+  });
+  ```
 
 #### **3. MongoDB Connection Timeouts** ✅ **FIXED**
 - **Problem**: Serverless functions have different connection requirements than regular servers
