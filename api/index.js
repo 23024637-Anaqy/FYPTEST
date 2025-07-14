@@ -13,18 +13,30 @@ const createReportsRoutes = require('../routes/reports-mongo');
 
 const app = express();
 
-// Initialize MongoDB connection
+// Initialize MongoDB connection for Vercel serverless
 async function connectDB() {
     if (mongoose.connection.readyState === 0) {
         try {
+            console.log('🔄 Connecting to MongoDB Atlas...');
             await mongoose.connect(process.env.MONGODB_URI, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
+                serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+                socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+                bufferCommands: false, // Disable mongoose buffering
+                bufferMaxEntries: 0, // Disable mongoose buffering
+                maxPoolSize: 10, // Maintain up to 10 socket connections
+                minPoolSize: 5, // Maintain a minimum of 5 socket connections
+                maxIdleTimeMS: 30000, // Close connections after 30s of inactivity
+                family: 4 // Use IPv4, skip trying IPv6
             });
             console.log('✅ Connected to MongoDB Atlas');
         } catch (error) {
             console.error('❌ MongoDB connection error:', error);
+            throw error; // Re-throw to handle in route
         }
+    } else if (mongoose.connection.readyState === 1) {
+        console.log('♻️ Using existing MongoDB connection');
     }
 }
 
@@ -52,6 +64,21 @@ app.use(cors({
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Connect to database before handling requests (moved to beginning)
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        console.error('Database connection failed:', error);
+        res.status(500).json({ 
+            error: 'Database connection failed',
+            message: error.message,
+            timestamp: new Date().toISOString()
+        });
+    }
+});
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -82,12 +109,6 @@ app.get('/', (req, res) => {
 app.use((err, req, res, next) => {
     console.error('Error:', err.stack);
     res.status(500).json({ error: 'Internal server error' });
-});
-
-// Connect to database before handling requests
-app.use(async (req, res, next) => {
-    await connectDB();
-    next();
 });
 
 // Export for Vercel

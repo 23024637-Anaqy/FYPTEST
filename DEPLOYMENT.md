@@ -291,6 +291,77 @@ Your Lakers Inventory Management System is now:
 
 ---
 
+## 🔍 **Runtime Logs & Debugging** 
+
+### **✅ Current Status: DEBUGGING IN PROGRESS**
+
+**Latest Runtime Log (2025-07-14T16:03:20.469Z):**
+```
+[error] Cannot find module './routes/auth-mongo'
+Require stack: /var/task/api/index.js
+Node.js process exited with exit status: 1
+```
+
+### **🛠️ Issues Identified & Fixed:**
+
+#### **1. Module Import Paths** ✅ **FIXED**
+- **Problem**: Serverless functions use different file structure than local development
+- **Error**: `Cannot find module './routes/auth-mongo'`
+- **Solution**: Updated import paths in `api/index.js`:
+  ```javascript
+  // BEFORE (broken):
+  const createAuthRoutes = require('./routes/auth-mongo');
+  
+  // AFTER (fixed):
+  const createAuthRoutes = require('../routes/auth-mongo');
+  ```
+
+#### **2. Static File Paths** ✅ **FIXED**
+- **Problem**: Public folder not accessible in Vercel serverless environment
+- **Solution**: Updated static file serving paths:
+  ```javascript
+  // BEFORE:
+  app.use(express.static(path.join(__dirname, 'public')));
+  
+  // AFTER:
+  app.use(express.static(path.join(__dirname, '../public')));
+  ```
+
+### **🔧 Debug Endpoints Deployed:**
+
+Your Vercel deployment now includes comprehensive debugging tools:
+
+1. **`/api/logs-test`** - Basic logging verification
+2. **`/api/path-test`** - File system path debugging  
+3. **`/api/debug-verbose`** - Complete environment analysis
+4. **`/api/debug-login`** - Authentication-specific debugging
+
+### **📊 How to Access Runtime Logs:**
+
+#### **Method 1: Vercel Dashboard** ⭐ **RECOMMENDED**
+1. Visit: https://vercel.com/dashboard
+2. Click your project → Select deployment
+3. Go to "Functions" tab → Click any function
+4. View "Invocations" for real-time logs
+
+#### **Method 2: Debug Endpoints**
+Once deployment completes, visit:
+- `https://your-app.vercel.app/api/logs-test`
+- `https://your-app.vercel.app/api/path-test`
+
+#### **Method 3: CLI Logs**
+```bash
+npx vercel logs <deployment-url>
+```
+
+### **🎯 Next Steps:**
+1. ✅ **Path fixes deployed** - Wait for deployment completion
+2. 🔄 **Test debug endpoints** - Verify file structure is correct
+3. 🔍 **Check authentication** - Test login functionality
+4. 🚀 **Full system test** - Verify all features work
+
+---
+
 ## 🏀 **"Mamba Mentality" - Championship-Level Inventory Management**
 
 *Your system now embodies the Lakers' winning spirit - precision, performance, and championship results. Ready to dominate the inventory management game!* 🏆

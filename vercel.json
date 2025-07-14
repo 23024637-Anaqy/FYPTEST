@@ -23,6 +23,10 @@
       "dest": "/api/path-test.js"
     },
     {
+      "src": "/api/mongodb-test",
+      "dest": "/api/mongodb-test.js"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/index.js"
     },
