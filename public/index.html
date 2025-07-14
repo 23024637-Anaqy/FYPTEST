@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="logo">
+                <i class="fas fa-boxes"></i>
+                <h1>Inventory System</h1>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">
+                        <i class="fas fa-user"></i>
+                        Username
+                    </label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </button>
+            </form>
+            <div id="loginError" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="main-app" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button id="menuToggle" class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Inventory Manager</h1>
+            </div>
+            <div class="header-right">
+                <span id="userInfo" class="user-info"></span>
+                <button id="logoutBtn" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="sidebar">
+            <ul class="nav-menu">
+                <li><a href="#dashboard" data-section="dashboard" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a></li>
+                <li><a href="#inbound" data-section="inbound" class="nav-link">
+                    <i class="fas fa-arrow-down"></i>
+                    Inbound
+                </a></li>
+                <li><a href="#outbound" data-section="outbound" class="nav-link">
+                    <i class="fas fa-arrow-up"></i>
+                    Outbound
+                </a></li>
+                <li><a href="#move" data-section="move" class="nav-link">
+                    <i class="fas fa-exchange-alt"></i>
+                    Move Stock
+                </a></li>
+                <li><a href="#stock" data-section="stock" class="nav-link">
+                    <i class="fas fa-cubes"></i>
+                    Current Stock
+                </a></li>
+                <li class="supervisor-only"><a href="#stocktake" data-section="stocktake" class="nav-link">
+                    <i class="fas fa-clipboard-check"></i>
+                    Stock Take
+                </a></li>
+                <li class="supervisor-only"><a href="#reports" data-section="reports" class="nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    Reports
+                </a></li>
+                <li><a href="#transactions" data-section="transactions" class="nav-link">
+                    <i class="fas fa-history"></i>
+                    Transactions
+                </a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <h2>Dashboard</h2>
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-cubes"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="totalProducts">0</h3>
+                            <p>Total Products</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="totalLocations">0</h3>
+                            <p>Locations</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="lowStockItems">0</h3>
+                            <p>Low Stock Items</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="todayTransactions">0</h3>
+                            <p>Today's Transactions</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div id="recentTransactions" class="transaction-list">
+                        <!-- Recent transactions will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inbound Section -->
+            <section id="inbound" class="content-section">
+                <h2>Inbound Stock</h2>
+                <form id="inboundForm" class="transaction-form">
+                    <div class="form-group">
+                        <label for="inboundProduct">Product</label>
+                        <select id="inboundProduct" name="product_id" required>
+                            <option value="">Select Product</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inboundLocation">Location</label>
+                        <select id="inboundLocation" name="location_id" required>
+                            <option value="">Select Location</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inboundQuantity">Quantity</label>
+                        <input type="number" id="inboundQuantity" name="quantity" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inboundReference">Reference Number</label>
+                        <input type="text" id="inboundReference" name="reference_number" placeholder="PO-12345">
+                    </div>
+                    <div class="form-group">
+                        <label for="inboundNotes">Notes</label>
+                        <textarea id="inboundNotes" name="notes" rows="3" placeholder="Additional notes..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add Inbound Stock
+                    </button>
+                </form>
+            </section>
+
+            <!-- Outbound Section -->
+            <section id="outbound" class="content-section">
+                <h2>Outbound Stock</h2>
+                <form id="outboundForm" class="transaction-form">
+                    <div class="form-group">
+                        <label for="outboundProduct">Product</label>
+                        <select id="outboundProduct" name="product_id" required>
+                            <option value="">Select Product</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="outboundLocation">Location</label>
+                        <select id="outboundLocation" name="location_id" required>
+                            <option value="">Select Location</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="outboundQuantity">Quantity</label>
+                        <input type="number" id="outboundQuantity" name="quantity" min="1" required>
+                    </div>
+                    <div id="availableStock" class="stock-info" style="display: none;">
+                        Available: <span id="availableQuantity">0</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="outboundReference">Reference Number</label>
+                        <input type="text" id="outboundReference" name="reference_number" placeholder="SO-12345">
+                    </div>
+                    <div class="form-group">
+                        <label for="outboundNotes">Notes</label>
+                        <textarea id="outboundNotes" name="notes" rows="3" placeholder="Additional notes..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-minus"></i>
+                        Remove Outbound Stock
+                    </button>
+                </form>
+            </section>
+
+            <!-- Move Section -->
+            <section id="move" class="content-section">
+                <h2>Move Stock</h2>
+                <form id="moveForm" class="transaction-form">
+                    <div class="form-group">
+                        <label for="moveProduct">Product</label>
+                        <select id="moveProduct" name="product_id" required>
+                            <option value="">Select Product</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fromLocation">From Location</label>
+                        <select id="fromLocation" name="from_location_id" required>
+                            <option value="">Select Source Location</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="toLocation">To Location</label>
+                        <select id="toLocation" name="to_location_id" required>
+                            <option value="">Select Destination Location</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="moveQuantity">Quantity</label>
+                        <input type="number" id="moveQuantity" name="quantity" min="1" required>
+                    </div>
+                    <div id="moveAvailableStock" class="stock-info" style="display: none;">
+                        Available at source: <span id="moveAvailableQuantity">0</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="moveReference">Reference Number</label>
+                        <input type="text" id="moveReference" name="reference_number" placeholder="MV-12345">
+                    </div>
+                    <div class="form-group">
+                        <label for="moveNotes">Notes</label>
+                        <textarea id="moveNotes" name="notes" rows="3" placeholder="Additional notes..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-arrows-alt"></i>
+                        Move Stock
+                    </button>
+                </form>
+            </section>
+
+            <!-- Stock Section -->
+            <section id="stock" class="content-section">
+                <h2>Current Stock Levels</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="stockLocationFilter">Location</label>
+                        <select id="stockLocationFilter">
+                            <option value="">All Locations</option>
+                        </select>
+                    </div>
+                    <button id="refreshStock" class="btn btn-secondary">
+                        <i class="fas fa-sync"></i>
+                        Refresh
+                    </button>
+                </div>
+                <div id="stockTable" class="table-container">
+                    <!-- Stock table will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Stock Take Section -->
+            <section id="stocktake" class="content-section supervisor-only">
+                <h2>Stock Take</h2>
+                <div id="stocktakeContainer">
+                    <!-- Stock take interface will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="content-section supervisor-only">
+                <h2>Reports</h2>
+                <div class="report-tabs">
+                    <button class="tab-btn active" data-report="inbound">Inbound</button>
+                    <button class="tab-btn" data-report="outbound">Outbound</button>
+                    <button class="tab-btn" data-report="stock-levels">Stock Levels</button>
+                    <button class="tab-btn" data-report="transactions">Transaction Summary</button>
+                </div>
+                <div class="report-filters">
+                    <div class="filter-group">
+                        <label for="reportStartDate">Start Date</label>
+                        <input type="date" id="reportStartDate">
+                    </div>
+                    <div class="filter-group">
+                        <label for="reportEndDate">End Date</label>
+                        <input type="date" id="reportEndDate">
+                    </div>
+                    <button id="generateReport" class="btn btn-primary">
+                        <i class="fas fa-chart-bar"></i>
+                        Generate Report
+                    </button>
+                </div>
+                <div id="reportContent" class="report-content">
+                    <!-- Report content will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section id="transactions" class="content-section">
+                <h2>Transaction History</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="transactionTypeFilter">Type</label>
+                        <select id="transactionTypeFilter">
+                            <option value="">All Types</option>
+                            <option value="inbound">Inbound</option>
+                            <option value="outbound">Outbound</option>
+                            <option value="move">Move</option>
+                            <option value="adjustment">Adjustment</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="transactionStartDate">Start Date</label>
+                        <input type="date" id="transactionStartDate">
+                    </div>
+                    <div class="filter-group">
+                        <label for="transactionEndDate">End Date</label>
+                        <input type="date" id="transactionEndDate">
+                    </div>
+                    <button id="filterTransactions" class="btn btn-secondary">
+                        <i class="fas fa-filter"></i>
+                        Filter
+                    </button>
+                </div>
+                <div id="transactionTable" class="table-container">
+                    <!-- Transaction table will be loaded here -->
+                </div>
+                <div id="transactionPagination" class="pagination">
+                    <!-- Pagination will be loaded here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3 id="confirmTitle">Confirm Action</h3>
+            <p id="confirmMessage">Are you sure?</p>
+            <div class="modal-actions">
+                <button id="confirmCancel" class="btn btn-secondary">Cancel</button>
+                <button id="confirmOk" class="btn btn-primary">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
