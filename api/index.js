@@ -19,18 +19,13 @@ async function connectDB() {
         try {
             console.log('🔄 Connecting to MongoDB Atlas...');
             
-            // Disable Mongoose buffering for serverless
-            mongoose.set('bufferCommands', false);
-            
+            // Simple connection for Mongoose 8.x compatibility
             await mongoose.connect(process.env.MONGODB_URI, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
                 serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
                 socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
                 maxPoolSize: 10, // Maintain up to 10 socket connections
                 minPoolSize: 5, // Maintain a minimum of 5 socket connections
                 maxIdleTimeMS: 30000, // Close connections after 30s of inactivity
-                family: 4 // Use IPv4, skip trying IPv6
             });
             console.log('✅ Connected to MongoDB Atlas');
         } catch (error) {
