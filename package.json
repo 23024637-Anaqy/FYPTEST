@@ -2,10 +2,12 @@
   "name": "inventory-management-system",
   "version": "1.0.0",
   "description": "Mobile-friendly Inventory Management System",
-  "main": "server.js",
+  "main": "api/index.js",
   "scripts": {
     "start": "node server.js",
     "start-mongo": "node server-mongo.js",
+    "build": "echo 'Build complete'",
+    "vercel-build": "echo 'Vercel build complete'",
     "dev": "nodemon server.js",
     "dev-mongo": "nodemon server-mongo.js",
     "init-db": "node scripts/init-database.js",
