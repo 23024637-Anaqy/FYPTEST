@@ -1,0 +1,762 @@
+/* GitHub Pages Demo CSS - Lakers Color Scheme */
+:root {
+    --lakers-purple: #552583;
+    --lakers-gold: #FDB927;
+    --purple-dark: #3e1a5b;
+    --purple-light: #8b5fbf;
+    --gold-dark: #e6a41f;
+    --gold-light: #ffc954;
+    --white: #ffffff;
+    --black: #000000;
+    --gray-light: #f5f5f5;
+    --gray-medium: #ddd;
+    --gray-dark: #666;
+    
+    --error-color: #e74c3c;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --info-color: #3498db;
+    
+    --shadow: 0 2px 10px rgba(0,0,0,0.1);
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--black);
+    background: linear-gradient(135deg, var(--purple-light) 0%, var(--lakers-purple) 100%);
+    min-height: 100vh;
+}
+
+/* Demo Notice */
+.demo-notice {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--lakers-gold);
+    color: var(--black);
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    z-index: 1001;
+    box-shadow: var(--shadow);
+}
+
+.demo-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+/* Loading Screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--lakers-purple);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    z-index: 1000;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(253, 185, 39, 0.3);
+    border-top: 4px solid var(--lakers-gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Login Screen */
+.login-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--lakers-purple) 0%, var(--purple-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-container {
+    background: var(--white);
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.logo {
+    margin-bottom: 30px;
+}
+
+.logo i {
+    font-size: 3rem;
+    color: var(--lakers-purple);
+    margin-bottom: 10px;
+}
+
+.logo h1 {
+    color: var(--lakers-purple);
+    margin-bottom: 5px;
+}
+
+.demo-subtitle {
+    color: var(--lakers-gold);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--gray-dark);
+    font-weight: 500;
+}
+
+.form-group label i {
+    margin-right: 8px;
+    color: var(--lakers-purple);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--gray-medium);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--lakers-purple);
+    box-shadow: 0 0 0 3px rgba(85, 37, 131, 0.1);
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--lakers-purple);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background: var(--purple-dark);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: var(--lakers-gold);
+    color: var(--black);
+}
+
+.btn-secondary:hover {
+    background: var(--gold-dark);
+}
+
+.btn-login {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.demo-accounts {
+    background: var(--gray-light);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.demo-accounts h4 {
+    margin-bottom: 10px;
+    color: var(--lakers-purple);
+}
+
+.error-message {
+    background: var(--error-color);
+    color: var(--white);
+    padding: 10px;
+    border-radius: var(--border-radius);
+    margin-top: 15px;
+}
+
+/* Main App Layout */
+.main-app {
+    display: grid;
+    grid-template-areas: 
+        "header header"
+        "sidebar main";
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: 60px 1fr;
+    height: 100vh;
+    padding-top: 40px; /* Account for demo notice */
+}
+
+/* Header */
+.header {
+    grid-area: header;
+    background: var(--white);
+    border-bottom: 3px solid var(--lakers-gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: var(--shadow);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--lakers-purple);
+}
+
+.header h1 {
+    color: var(--lakers-purple);
+    font-size: 1.5rem;
+}
+
+.demo-tag {
+    background: var(--lakers-gold);
+    color: var(--black);
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info {
+    color: var(--gray-dark);
+    font-weight: 500;
+}
+
+/* Sidebar */
+.sidebar {
+    grid-area: sidebar;
+    background: var(--lakers-purple);
+    padding: 20px 0;
+    overflow-y: auto;
+}
+
+.nav-menu {
+    list-style: none;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    color: var(--white);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: var(--lakers-gold);
+    color: var(--black);
+}
+
+.nav-link i {
+    width: 20px;
+    text-align: center;
+}
+
+/* Main Content */
+.main-content {
+    grid-area: main;
+    padding: 30px;
+    overflow-y: auto;
+    background: var(--gray-light);
+}
+
+.content-section {
+    display: none;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    box-shadow: var(--shadow);
+}
+
+.content-section.active {
+    display: block;
+}
+
+.content-section h2 {
+    color: var(--lakers-purple);
+    margin-bottom: 25px;
+    border-bottom: 3px solid var(--lakers-gold);
+    padding-bottom: 10px;
+}
+
+.demo-indicator {
+    background: var(--lakers-gold);
+    color: var(--black);
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+.demo-warning {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    padding: 12px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Dashboard Cards */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--gray-medium);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.card-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--lakers-purple);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.card-content h3 {
+    font-size: 2rem;
+    color: var(--lakers-purple);
+    margin-bottom: 5px;
+}
+
+.card-content p {
+    color: var(--gray-dark);
+    font-size: 0.9rem;
+}
+
+/* Recent Activity */
+.recent-activity {
+    background: var(--gray-light);
+    padding: 20px;
+    border-radius: var(--border-radius);
+}
+
+.recent-activity h3 {
+    color: var(--lakers-purple);
+    margin-bottom: 15px;
+}
+
+.transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.transaction-item {
+    background: var(--white);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid var(--lakers-gold);
+}
+
+.transaction-details {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.transaction-type {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--white);
+}
+
+.status-inbound {
+    background: var(--success-color);
+}
+
+.status-outbound {
+    background: var(--error-color);
+}
+
+.status-move {
+    background: var(--info-color);
+}
+
+.transaction-time {
+    color: var(--gray-dark);
+    font-size: 0.9rem;
+}
+
+/* Forms */
+.transaction-form {
+    background: var(--gray-light);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+}
+
+/* Tables */
+.table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-medium);
+}
+
+.table th {
+    background: var(--lakers-purple);
+    color: var(--white);
+    font-weight: 600;
+}
+
+.table tr:hover {
+    background: var(--gray-light);
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--white);
+}
+
+.status-normal {
+    background: var(--success-color);
+}
+
+.status-adjustment {
+    background: var(--warning-color);
+}
+
+/* Filters */
+.filters {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-group label {
+    font-weight: 500;
+    color: var(--gray-dark);
+}
+
+/* Message Container */
+.message-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.message {
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.message.success {
+    background: var(--success-color);
+    color: var(--white);
+}
+
+.message.error {
+    background: var(--error-color);
+    color: var(--white);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+}
+
+.modal-content {
+    background: var(--white);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    max-width: 500px;
+    width: 90%;
+    box-shadow: var(--shadow);
+}
+
+.modal-content h3 {
+    color: var(--lakers-purple);
+    margin-bottom: 15px;
+}
+
+.modal-content ul {
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-app {
+        grid-template-areas: 
+            "header"
+            "main";
+        grid-template-columns: 1fr;
+        grid-template-rows: 60px 1fr;
+    }
+    
+    .sidebar {
+        position: fixed;
+        top: 100px; /* Account for demo notice + header */
+        left: -250px;
+        width: 250px;
+        height: calc(100vh - 100px);
+        z-index: 999;
+        transition: var(--transition);
+    }
+    
+    .sidebar.active {
+        left: 0;
+    }
+    
+    .menu-toggle {
+        display: block;
+    }
+    
+    .main-content {
+        padding: 20px 15px;
+    }
+    
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .header-right {
+        gap: 10px;
+    }
+    
+    .user-info {
+        display: none;
+    }
+    
+    .transaction-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 30px 20px;
+    }
+    
+    .main-content {
+        padding: 15px 10px;
+    }
+    
+    .content-section {
+        padding: 20px 15px;
+    }
+    
+    .transaction-form {
+        padding: 20px 15px;
+    }
+    
+    .demo-content {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .close-btn {
+        margin-left: 0;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .demo-notice,
+    .header,
+    .sidebar,
+    .btn,
+    .demo-warning {
+        display: none !important;
+    }
+    
+    .main-app {
+        grid-template-areas: "main";
+        grid-template-columns: 1fr;
+    }
+    
+    .content-section {
+        box-shadow: none;
+        border: 1px solid var(--gray-medium);
+    }
+}
+
+/* Supervisor-only elements (hidden for regular users in demo) */
+body:not(.supervisor) .supervisor-only {
+    display: none;
+}
+
+/* Dark mode support (if needed later) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --white: #2c3e50;
+        --black: #ecf0f1;
+        --gray-light: #34495e;
+        --gray-medium: #4a5f7a;
+        --gray-dark: #bdc3c7;
+    }
+}

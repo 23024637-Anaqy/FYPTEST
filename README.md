@@ -1,6 +1,11 @@
-# Inventory Management System
+# Lakers Inventory Management System
 
-A mobile-friendly web-based inventory management system built with Node.js, Express, SQLite, and vanilla JavaScript. Features Lakers team colors (purple and gold) and role-based access control.
+🏀 **A comprehensive, mobile-friendly inventory management system with Lakers team colors and professional-grade features.**
+
+## 🎭 Live Demo
+
+- **GitHub Pages Demo:** [Live Demo Link](https://yourusername.github.io/fyptestin/)
+- **Full Version:** Available on request with MongoDB backend
 
 ## Features
 

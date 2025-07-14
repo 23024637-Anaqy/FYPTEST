@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System - Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Demo Notice -->
+    <div id="demoNotice" class="demo-notice">
+        <div class="demo-content">
+            <i class="fas fa-info-circle"></i>
+            <span>This is a demo version. Use <strong>admin/admin123</strong> or <strong>demo/demo</strong> to login.</span>
+            <button onclick="closeDemoNotice()" class="close-btn">&times;</button>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loading" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="logo">
+                <i class="fas fa-boxes"></i>
+                <h1>Inventory System</h1>
+                <p class="demo-subtitle">GitHub Pages Demo</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">
+                        <i class="fas fa-user"></i>
+                        Username
+                    </label>
+                    <input type="text" id="username" name="username" value="admin" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <input type="password" id="password" name="password" value="admin123" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login (Demo)
+                </button>
+                <div class="demo-accounts">
+                    <h4>Demo Accounts:</h4>
+                    <p><strong>Admin:</strong> admin / admin123</p>
+                    <p><strong>User:</strong> demo / demo</p>
+                </div>
+            </form>
+            <div id="loginError" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="main-app" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button id="menuToggle" class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Inventory Manager <span class="demo-tag">DEMO</span></h1>
+            </div>
+            <div class="header-right">
+                <span id="userInfo" class="user-info"></span>
+                <button id="logoutBtn" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="sidebar">
+            <ul class="nav-menu">
+                <li><a href="#dashboard" data-section="dashboard" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a></li>
+                <li><a href="#inbound" data-section="inbound" class="nav-link">
+                    <i class="fas fa-arrow-down"></i>
+                    Inbound
+                </a></li>
+                <li><a href="#outbound" data-section="outbound" class="nav-link">
+                    <i class="fas fa-arrow-up"></i>
+                    Outbound
+                </a></li>
+                <li><a href="#move" data-section="move" class="nav-link">
+                    <i class="fas fa-exchange-alt"></i>
+                    Move Stock
+                </a></li>
+                <li><a href="#stock" data-section="stock" class="nav-link">
+                    <i class="fas fa-cubes"></i>
+                    Current Stock
+                </a></li>
+                <li class="supervisor-only"><a href="#stocktake" data-section="stocktake" class="nav-link">
+                    <i class="fas fa-clipboard-check"></i>
+                    Stock Take
+                </a></li>
+                <li class="supervisor-only"><a href="#reports" data-section="reports" class="nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    Reports
+                </a></li>
+                <li><a href="#transactions" data-section="transactions" class="nav-link">
+                    <i class="fas fa-history"></i>
+                    Transactions
+                </a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <h2>Dashboard <span class="demo-indicator">(Demo Data)</span></h2>
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-cubes"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="totalProducts">12</h3>
+                            <p>Total Products</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="totalLocations">5</h3>
+                            <p>Locations</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="lowStockItems">3</h3>
+                            <p>Low Stock Items</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3 id="todayTransactions">8</h3>
+                            <p>Today's Transactions</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-activity">
+                    <h3>Recent Activity <span class="demo-indicator">(Sample Data)</span></h3>
+                    <div id="recentTransactions" class="transaction-list">
+                        <div class="transaction-item">
+                            <div class="transaction-details">
+                                <div class="transaction-type status-inbound">INBOUND</div>
+                                <div class="transaction-info">Laptop Computer - Qty: 5 To: Main Warehouse</div>
+                            </div>
+                            <div class="transaction-time">2 hours ago</div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-details">
+                                <div class="transaction-type status-outbound">OUTBOUND</div>
+                                <div class="transaction-info">Wireless Mouse - Qty: 3 From: Retail Store</div>
+                            </div>
+                            <div class="transaction-time">4 hours ago</div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-details">
+                                <div class="transaction-type status-move">MOVE</div>
+                                <div class="transaction-info">Office Chair - Qty: 2 From: Main Warehouse To: Retail Store</div>
+                            </div>
+                            <div class="transaction-time">6 hours ago</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inbound Section -->
+            <section id="inbound" class="content-section">
+                <h2>Inbound Stock <span class="demo-indicator">(Demo Mode)</span></h2>
+                <div class="demo-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>This is a demo. Changes are simulated and not saved.</span>
+                </div>
+                <form id="inboundForm" class="transaction-form">
+                    <div class="form-group">
+                        <label for="inboundProduct">Product</label>
+                        <select id="inboundProduct" name="product_id" required>
+                            <option value="">Select Product</option>
+                            <option value="1">LAPTOP001 - Laptop Computer</option>
+                            <option value="2">MOUSE001 - Wireless Mouse</option>
+                            <option value="3">DESK001 - Office Desk</option>
+                            <option value="4">CHAIR001 - Office Chair</option>
+                            <option value="5">PAPER001 - Copy Paper</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inboundLocation">Location</label>
+                        <select id="inboundLocation" name="location_id" required>
+                            <option value="">Select Location</option>
+                            <option value="1">WH001 - Main Warehouse</option>
+                            <option value="2">WH002 - Secondary Warehouse</option>
+                            <option value="3">RETAIL - Retail Store</option>
+                            <option value="4">SHIPPING - Shipping Dock</option>
+                            <option value="5">RECEIVING - Receiving Dock</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inboundQuantity">Quantity</label>
+                        <input type="number" id="inboundQuantity" name="quantity" min="1" value="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inboundReference">Reference Number</label>
+                        <input type="text" id="inboundReference" name="reference_number" placeholder="PO-12345" value="PO-2024001">
+                    </div>
+                    <div class="form-group">
+                        <label for="inboundNotes">Notes</label>
+                        <textarea id="inboundNotes" name="notes" rows="3" placeholder="Additional notes...">Demo inbound transaction</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add Inbound Stock (Demo)
+                    </button>
+                </form>
+            </section>
+
+            <!-- Add all other sections with demo indicators and sample data -->
+            <!-- For brevity, I'll include a few key sections -->
+
+            <!-- Stock Section -->
+            <section id="stock" class="content-section">
+                <h2>Current Stock Levels <span class="demo-indicator">(Demo Data)</span></h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="stockLocationFilter">Location</label>
+                        <select id="stockLocationFilter">
+                            <option value="">All Locations</option>
+                            <option value="1">Main Warehouse</option>
+                            <option value="2">Secondary Warehouse</option>
+                            <option value="3">Retail Store</option>
+                        </select>
+                    </div>
+                    <button id="refreshStock" class="btn btn-secondary">
+                        <i class="fas fa-sync"></i>
+                        Refresh (Demo)
+                    </button>
+                </div>
+                <div id="stockTable" class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product Code</th>
+                                <th>Product Name</th>
+                                <th>Location</th>
+                                <th>Current Stock</th>
+                                <th>Min Level</th>
+                                <th>Max Level</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LAPTOP001</td>
+                                <td>Laptop Computer</td>
+                                <td>Main Warehouse</td>
+                                <td>25</td>
+                                <td>5</td>
+                                <td>50</td>
+                                <td><span class="status-badge status-normal">Normal</span></td>
+                            </tr>
+                            <tr>
+                                <td>MOUSE001</td>
+                                <td>Wireless Mouse</td>
+                                <td>Main Warehouse</td>
+                                <td>3</td>
+                                <td>10</td>
+                                <td>100</td>
+                                <td><span class="status-badge status-adjustment">Low Stock</span></td>
+                            </tr>
+                            <tr>
+                                <td>DESK001</td>
+                                <td>Office Desk</td>
+                                <td>Retail Store</td>
+                                <td>0</td>
+                                <td>3</td>
+                                <td>20</td>
+                                <td><span class="status-badge status-outbound">Out of Stock</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Continue with other sections... -->
+            <section id="outbound" class="content-section">
+                <h2>Outbound Stock <span class="demo-indicator">(Demo Mode)</span></h2>
+                <div class="demo-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>This is a demo. Changes are simulated and not saved.</span>
+                </div>
+                <!-- Similar form structure as inbound -->
+            </section>
+
+            <!-- Add placeholder sections for move, stocktake, reports, transactions -->
+        </main>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <!-- Demo Info Modal -->
+    <div id="demoModal" class="modal">
+        <div class="modal-content">
+            <h3>Demo Version Information</h3>
+            <p>This is a static demo of the Inventory Management System. All data is simulated and changes are not saved.</p>
+            <p><strong>Full Version Features:</strong></p>
+            <ul>
+                <li>MongoDB database integration</li>
+                <li>Real-time data persistence</li>
+                <li>User authentication and authorization</li>
+                <li>Complete audit trail</li>
+                <li>Advanced reporting</li>
+            </ul>
+            <div class="modal-actions">
+                <button onclick="closeDemoModal()" class="btn btn-primary">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app-demo.js"></script>
+</body>
+</html>
