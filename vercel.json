@@ -1,16 +1,23 @@
 {
   "version": 2,
-  "builds": [
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 30
+    }
+  },
+  "routes": [
     {
-      "src": "api/index.js",
-      "use": "@vercel/node"
+      "src": "/api/debug-login",
+      "dest": "/api/debug-login.js"
     },
     {
-      "src": "public/**/*",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
+      "src": "/api/debug-verbose", 
+      "dest": "/api/debug-verbose.js"
+    },
+    {
+      "src": "/api/logs-test",
+      "dest": "/api/logs-test.js"
+    },
     {
       "src": "/api/(.*)",
       "dest": "/api/index.js"
@@ -22,10 +29,5 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "functions": {
-    "api/index.js": {
-      "maxDuration": 30
-    }
   }
 }
