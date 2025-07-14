@@ -194,6 +194,28 @@ function initializeEventListeners() {
         document.getElementById('confirmModal').classList.remove('show');
     });
 
+    // Product Management
+    document.getElementById('addProductBtn').addEventListener('click', () => {
+        document.getElementById('addProductForm').style.display = 'block';
+        document.getElementById('productCode').focus();
+    });
+    document.getElementById('cancelProductBtn').addEventListener('click', () => {
+        document.getElementById('addProductForm').style.display = 'none';
+        document.getElementById('productForm').reset();
+    });
+    document.getElementById('productForm').addEventListener('submit', handleProductSubmit);
+
+    // Location Management
+    document.getElementById('addLocationBtn').addEventListener('click', () => {
+        document.getElementById('addLocationForm').style.display = 'block';
+        document.getElementById('locationCode').focus();
+    });
+    document.getElementById('cancelLocationBtn').addEventListener('click', () => {
+        document.getElementById('addLocationForm').style.display = 'none';
+        document.getElementById('locationForm').reset();
+    });
+    document.getElementById('locationForm').addEventListener('submit', handleLocationSubmit);
+
     // Close sidebar when clicking outside
     document.addEventListener('click', (e) => {
         if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
@@ -238,6 +260,12 @@ function navigateToSection(sectionId) {
         case 'reports':
             // Reports are loaded on demand
             break;
+        case 'products':
+            loadProductsData();
+            break;
+        case 'locations':
+            loadLocationsData();
+            break;
     }
 }
 
@@ -270,8 +298,8 @@ async function apiRequest(endpoint, options = {}) {
 // Data Loading Functions
 async function loadProducts() {
     try {
-        const data = await apiRequest('/inventory/products');
-        updateProductSelects(data.products);
+        const products = await apiRequest('/inventory/products');
+        updateProductSelects(products);
     } catch (error) {
         showError('Failed to load products');
     }
@@ -289,14 +317,14 @@ async function loadLocations() {
 async function loadDashboardData() {
     try {
         // Load multiple data sources for dashboard
-        const [productsData, locationsData, stockData, transactionsData] = await Promise.all([
+        const [products, locations, stockData, transactionsData] = await Promise.all([
             apiRequest('/inventory/products'),
             apiRequest('/inventory/locations'),
             apiRequest('/inventory/stock'),
             apiRequest('/inventory/transactions?limit=5')
         ]);
 
-        updateDashboardStats(productsData, locationsData, stockData, transactionsData);
+        updateDashboardStats(products, locations, stockData, transactionsData);
         updateRecentTransactions(transactionsData.transactions);
     } catch (error) {
         showError('Failed to load dashboard data');
@@ -377,9 +405,9 @@ function updateLocationSelects(locations) {
     });
 }
 
-function updateDashboardStats(productsData, locationsData, stockData, transactionsData) {
-    document.getElementById('totalProducts').textContent = productsData.pagination.total;
-    document.getElementById('totalLocations').textContent = locationsData.length;
+function updateDashboardStats(products, locations, stockData, transactionsData) {
+    document.getElementById('totalProducts').textContent = products.length;
+    document.getElementById('totalLocations').textContent = locations.length;
     
     const lowStockCount = stockData.filter(item => 
         item.current_quantity <= item.min_stock_level
@@ -1014,6 +1042,197 @@ function startNewStocktake() {
 
 function viewStocktake(sessionId) {
     showMessage('Stocktake view functionality coming soon!', 'info');
+}
+
+// Product Management Functions
+async function loadProductsData() {
+    try {
+        const products = await apiRequest('/inventory/products');
+        displayProductsTable(products);
+    } catch (error) {
+        console.error('Error loading products:', error);
+        showError('Failed to load products');
+    }
+}
+
+function displayProductsTable(products) {
+    const container = document.getElementById('productsTable');
+    
+    if (!products || products.length === 0) {
+        container.innerHTML = '<div class="no-data">No products found. Add your first product above!</div>';
+        return;
+    }
+
+    const table = `
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Min Level</th>
+                    <th>Max Level</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${products.map(product => `
+                    <tr>
+                        <td>${product.product_code}</td>
+                        <td>${product.product_name}</td>
+                        <td>${product.category || '-'}</td>
+                        <td>$${(product.unit_price || 0).toFixed(2)}</td>
+                        <td>${product.min_stock_level || 0}</td>
+                        <td>${product.max_stock_level || 0}</td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" onclick="editProduct('${product._id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteProduct('${product._id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+    
+    container.innerHTML = table;
+}
+
+async function handleProductSubmit(e) {
+    e.preventDefault();
+    
+    try {
+        showLoading();
+        const formData = new FormData(e.target);
+        const productData = Object.fromEntries(formData);
+        
+        // Convert numeric fields
+        if (productData.unit_price) productData.unit_price = parseFloat(productData.unit_price);
+        if (productData.min_stock_level) productData.min_stock_level = parseInt(productData.min_stock_level);
+        if (productData.max_stock_level) productData.max_stock_level = parseInt(productData.max_stock_level);
+        
+        const result = await apiRequest('/inventory/products', {
+            method: 'POST',
+            body: JSON.stringify(productData)
+        });
+        
+        // Backend returns the created product directly on success
+        showMessage('Product added successfully!', 'success');
+        document.getElementById('addProductForm').style.display = 'none';
+        document.getElementById('productForm').reset();
+        loadProductsData();
+        loadProducts(); // Refresh dropdowns
+    } catch (error) {
+        console.error('Error adding product:', error);
+        showError(error.message || 'Failed to add product');
+    } finally {
+        hideLoading();
+    }
+}
+
+function editProduct(productId) {
+    showMessage('Edit product functionality coming soon!', 'info');
+}
+
+function deleteProduct(productId) {
+    showMessage('Delete product functionality coming soon!', 'info');
+}
+
+// Location Management Functions
+async function loadLocationsData() {
+    try {
+        const locations = await apiRequest('/inventory/locations');
+        displayLocationsTable(locations);
+    } catch (error) {
+        console.error('Error loading locations:', error);
+        showError('Failed to load locations');
+    }
+}
+
+function displayLocationsTable(locations) {
+    const container = document.getElementById('locationsTable');
+    
+    if (!locations || locations.length === 0) {
+        container.innerHTML = '<div class="no-data">No locations found. Add your first location above!</div>';
+        return;
+    }
+
+    const table = `
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${locations.map(location => `
+                    <tr>
+                        <td>${location.location_code}</td>
+                        <td>${location.location_name}</td>
+                        <td>${location.description || '-'}</td>
+                        <td>
+                            <span class="status ${location.is_active ? 'active' : 'inactive'}">
+                                ${location.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" onclick="editLocation('${location._id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteLocation('${location._id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+    
+    container.innerHTML = table;
+}
+
+async function handleLocationSubmit(e) {
+    e.preventDefault();
+    
+    try {
+        showLoading();
+        const formData = new FormData(e.target);
+        const locationData = Object.fromEntries(formData);
+        
+        const result = await apiRequest('/inventory/locations', {
+            method: 'POST',
+            body: JSON.stringify(locationData)
+        });
+        
+        // Backend returns the created location directly on success
+        showMessage('Location added successfully!', 'success');
+        document.getElementById('addLocationForm').style.display = 'none';
+        document.getElementById('locationForm').reset();
+        loadLocationsData();
+        loadLocations(); // Refresh dropdowns
+    } catch (error) {
+        console.error('Error adding location:', error);
+        showError(error.message || 'Failed to add location');
+    } finally {
+        hideLoading();
+    }
+}
+
+function editLocation(locationId) {
+    showMessage('Edit location functionality coming soon!', 'info');
+}
+
+function deleteLocation(locationId) {
+    showMessage('Delete location functionality coming soon!', 'info');
 }
 
 // Global error handler

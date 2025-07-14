@@ -65,10 +65,11 @@ app.use('/api/reports', createReportsRoutes());
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
+    const mongoose = require('mongoose');
     res.json({ 
         status: 'OK', 
         timestamp: new Date().toISOString(),
-        database: db.isConnected() ? 'Connected' : 'Disconnected',
+        database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
         version: '2.0.0-mongodb'
     });
 });

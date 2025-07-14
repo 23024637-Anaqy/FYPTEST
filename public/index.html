@@ -99,6 +99,14 @@
                     <i class="fas fa-history"></i>
                     Transactions
                 </a></li>
+                <li class="admin-only"><a href="#products" data-section="products" class="nav-link">
+                    <i class="fas fa-box"></i>
+                    Products
+                </a></li>
+                <li class="admin-only"><a href="#locations" data-section="locations" class="nav-link">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Locations
+                </a></li>
             </ul>
         </nav>
 
@@ -359,6 +367,118 @@
                 </div>
                 <div id="transactionPagination" class="pagination">
                     <!-- Pagination will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Products Management Section -->
+            <section id="products" class="content-section">
+                <h2>Product Management</h2>
+                <div class="section-header">
+                    <button id="addProductBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add New Product
+                    </button>
+                </div>
+                
+                <!-- Add Product Form -->
+                <div id="addProductForm" class="form-card" style="display: none;">
+                    <h3>Add New Product</h3>
+                    <form id="productForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="productCode">Product Code *</label>
+                                <input type="text" id="productCode" name="product_code" required placeholder="e.g. LAPTOP001">
+                            </div>
+                            <div class="form-group">
+                                <label for="productName">Product Name *</label>
+                                <input type="text" id="productName" name="product_name" required placeholder="e.g. Dell Laptop">
+                            </div>
+                            <div class="form-group">
+                                <label for="productCategory">Category</label>
+                                <select id="productCategory" name="category">
+                                    <option value="">Select Category</option>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="Furniture">Furniture</option>
+                                    <option value="Office Supplies">Office Supplies</option>
+                                    <option value="IT Equipment">IT Equipment</option>
+                                    <option value="Sports Equipment">Sports Equipment</option>
+                                    <option value="Cleaning Supplies">Cleaning Supplies</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="productPrice">Unit Price</label>
+                                <input type="number" id="productPrice" name="unit_price" step="0.01" min="0" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="minStockLevel">Min Stock Level</label>
+                                <input type="number" id="minStockLevel" name="min_stock_level" min="0" placeholder="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="maxStockLevel">Max Stock Level</label>
+                                <input type="number" id="maxStockLevel" name="max_stock_level" min="0" placeholder="100">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="productDescription">Description</label>
+                            <textarea id="productDescription" name="description" rows="3" placeholder="Optional product description"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" id="cancelProductBtn" class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Save Product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Products List -->
+                <div id="productsTable" class="table-container">
+                    <!-- Products table will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Locations Management Section -->
+            <section id="locations" class="content-section">
+                <h2>Location Management</h2>
+                <div class="section-header">
+                    <button id="addLocationBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add New Location
+                    </button>
+                </div>
+                
+                <!-- Add Location Form -->
+                <div id="addLocationForm" class="form-card" style="display: none;">
+                    <h3>Add New Location</h3>
+                    <form id="locationForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="locationCode">Location Code *</label>
+                                <input type="text" id="locationCode" name="location_code" required placeholder="e.g. WH001">
+                            </div>
+                            <div class="form-group">
+                                <label for="locationName">Location Name *</label>
+                                <input type="text" id="locationName" name="location_name" required placeholder="e.g. Main Warehouse">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="locationDescription">Description</label>
+                            <textarea id="locationDescription" name="description" rows="3" placeholder="Optional location description"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" id="cancelLocationBtn" class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Save Location
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Locations List -->
+                <div id="locationsTable" class="table-container">
+                    <!-- Locations table will be loaded here -->
                 </div>
             </section>
         </main>

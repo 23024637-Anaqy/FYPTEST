@@ -5,8 +5,15 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "start-mongo": "node server-mongo.js",
     "dev": "nodemon server.js",
-    "init-db": "node scripts/init-database.js"
+    "dev-mongo": "nodemon server-mongo.js",
+    "init-db": "node scripts/init-database.js",
+    "init-mongodb": "node scripts/init-mongodb.js",
+    "fix-admin": "node scripts/fix-admin.js",
+    "fix-admin-mongo": "node scripts/fix-admin-simple.js",
+    "test-mongo": "node scripts/test-mongo-auth.js",
+    "add-sample-data": "node scripts/add-sample-data.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

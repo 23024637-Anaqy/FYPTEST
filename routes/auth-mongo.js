@@ -75,7 +75,15 @@ const createAuthRoutes = () => {
     // Get current user info
     router.get('/me', authenticateToken, async (req, res) => {
         try {
-            const user = await User.findById(req.user.id).select('-password_hash');
+            // Handle both ObjectId and numeric ID formats
+            let userId = req.user.id;
+            if (typeof userId === 'number' || !userId.match(/^[0-9a-fA-F]{24}$/)) {
+                // If it's a numeric ID, find by username instead
+                const user = await User.findOne({ username: req.user.username }).select('-password_hash');
+                return res.json(user);
+            }
+
+            const user = await User.findById(userId).select('-password_hash');
 
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
@@ -101,8 +109,17 @@ const createAuthRoutes = () => {
                 return res.status(400).json({ error: 'New password must be at least 6 characters long' });
             }
 
-            // Get current user
-            const user = await User.findById(req.user.id);
+            // Handle both ObjectId and numeric ID formats
+            let user;
+            if (typeof req.user.id === 'number' || !req.user.id.match(/^[0-9a-fA-F]{24}$/)) {
+                user = await User.findOne({ username: req.user.username });
+            } else {
+                user = await User.findById(req.user.id);
+            }
+
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
 
             // Verify current password
             const validPassword = await bcrypt.compare(currentPassword, user.password_hash);
@@ -114,11 +131,11 @@ const createAuthRoutes = () => {
             const hashedPassword = await bcrypt.hash(newPassword, config.BCRYPT_ROUNDS);
 
             // Update password
-            await User.findByIdAndUpdate(req.user.id, { password_hash: hashedPassword });
+            await User.findByIdAndUpdate(user._id, { password_hash: hashedPassword });
 
             // Log password change
             const auditLog = new AuditLog({
-                user_id: req.user.id,
+                user_id: user._id,
                 action: 'PASSWORD_CHANGE',
                 ip_address: req.ip,
                 user_agent: req.get('User-Agent')
@@ -136,9 +153,16 @@ const createAuthRoutes = () => {
     // Logout
     router.post('/logout', authenticateToken, async (req, res) => {
         try {
+            // Handle both ObjectId and numeric ID formats for user ID
+            let userId = req.user.id;
+            if (typeof userId === 'number' || !userId.match(/^[0-9a-fA-F]{24}$/)) {
+                const user = await User.findOne({ username: req.user.username });
+                userId = user ? user._id : userId;
+            }
+
             // Log logout action
             const auditLog = new AuditLog({
-                user_id: req.user.id,
+                user_id: userId,
                 action: 'LOGOUT',
                 ip_address: req.ip,
                 user_agent: req.get('User-Agent')
