@@ -5,11 +5,11 @@ const helmet = require('helmet');
 const path = require('path');
 const mongoose = require('mongoose');
 
-// Import route handlers
-const createAuthRoutes = require('./routes/auth-mongo');
-const createInventoryRoutes = require('./routes/inventory-mongo');
-const createStocktakeRoutes = require('./routes/stocktake-mongo');
-const createReportsRoutes = require('./routes/reports-mongo');
+// Import route handlers (fixed paths for Vercel)
+const createAuthRoutes = require('../routes/auth-mongo');
+const createInventoryRoutes = require('../routes/inventory-mongo');
+const createStocktakeRoutes = require('../routes/stocktake-mongo');
+const createReportsRoutes = require('../routes/reports-mongo');
 
 const app = express();
 
@@ -70,12 +70,12 @@ app.use('/api/inventory', createInventoryRoutes());
 app.use('/api/stocktake', createStocktakeRoutes());
 app.use('/api/reports', createReportsRoutes());
 
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files (fixed path for Vercel)
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Serve main application
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
 // Error handling middleware
