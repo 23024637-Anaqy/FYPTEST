@@ -293,16 +293,36 @@ Your Lakers Inventory Management System is now:
 
 ## 🔍 **Runtime Logs & Debugging** 
 
-### **✅ Current Status: DEBUGGING IN PROGRESS**
+### **✅ Current Status: MONGODB CONNECTION FIXES DEPLOYED**
 
-**Latest Runtime Log (2025-07-14T16:03:20.469Z):**
+**Latest Runtime Log (2025-07-14T16:09:22.608Z):**
 ```
-[error] Cannot find module './routes/auth-mongo'
-Require stack: /var/task/api/index.js
-Node.js process exited with exit status: 1
+[info] [dotenv@17.2.0] injecting env (7) from .env ✅
+[error] Login error: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms ❌
 ```
 
-### **🛠️ Issues Identified & Fixed:**
+**Progress Analysis:**
+- ✅ **Module imports working** - No more "Cannot find module" errors
+- ✅ **Environment variables loading** - `.env` with 7 variables detected
+- ✅ **Authentication endpoint reached** - Getting to database queries
+- 🔧 **MongoDB timeout issue** - Connection timing out in serverless environment
+
+#### **3. MongoDB Connection Timeouts** ✅ **FIXED**
+- **Problem**: Serverless functions have different connection requirements than regular servers
+- **Error**: `MongooseError: Operation users.findOne() buffering timed out after 10000ms`
+- **Solution**: Optimized MongoDB connection for Vercel serverless:
+  ```javascript
+  await mongoose.connect(process.env.MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000, // Faster timeout
+    socketTimeoutMS: 45000,
+    bufferCommands: false, // Disable buffering
+    bufferMaxEntries: 0,
+    maxPoolSize: 10, // Connection pooling
+    minPoolSize: 5,
+    maxIdleTimeMS: 30000,
+    family: 4 // IPv4 only
+  });
+  ```
 
 #### **1. Module Import Paths** ✅ **FIXED**
 - **Problem**: Serverless functions use different file structure than local development
@@ -333,8 +353,9 @@ Your Vercel deployment now includes comprehensive debugging tools:
 
 1. **`/api/logs-test`** - Basic logging verification
 2. **`/api/path-test`** - File system path debugging  
-3. **`/api/debug-verbose`** - Complete environment analysis
-4. **`/api/debug-login`** - Authentication-specific debugging
+3. **`/api/mongodb-test`** - MongoDB connection testing ⭐ **NEW**
+4. **`/api/debug-verbose`** - Complete environment analysis
+5. **`/api/debug-login`** - Authentication-specific debugging
 
 ### **📊 How to Access Runtime Logs:**
 
@@ -347,6 +368,7 @@ Your Vercel deployment now includes comprehensive debugging tools:
 #### **Method 2: Debug Endpoints**
 Once deployment completes, visit:
 - `https://your-app.vercel.app/api/logs-test`
+- `https://your-app.vercel.app/api/mongodb-test` ⭐ **NEW - Test MongoDB connection**
 - `https://your-app.vercel.app/api/path-test`
 
 #### **Method 3: CLI Logs**
