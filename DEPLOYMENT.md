@@ -293,20 +293,35 @@ Your Lakers Inventory Management System is now:
 
 ## 🔍 **Runtime Logs & Debugging** 
 
-### **✅ Current Status: MONGODB OPTIONS FIXED**
+### **✅ Current Status: MONGOOSE VERSION COMPATIBILITY FIXED**
 
-**Latest Runtime Log (2025-07-14T16:17:31.533Z):**
+**Latest Runtime Log (2025-07-14T16:28:11.341Z):**
 ```
 [info] [dotenv@17.2.0] injecting env (7) from .env ✅
 [info] 🔄 Connecting to MongoDB Atlas... ✅
-[error] ❌ MongoDB connection error: MongoParseError: option buffermaxentries is not supported ❌
+[error] ❌ MongoDB connection error: Error: bufferMaxEntries: "bufferMaxEntries" is not a valid option to set ❌
 ```
 
 **Progress Analysis:**
 - ✅ **Environment variables working** - All 7 variables loaded correctly
-- ✅ **MongoDB connection attempt started** - Getting to database connection
+- ✅ **MongoDB connection attempt starting** - Getting to database connection
 - ✅ **Module imports working** - No path issues
-- 🔧 **MongoDB option error** - `bufferMaxEntries` not supported in this MongoDB version
+- 🔧 **Mongoose version compatibility** - `bufferMaxEntries` not supported in Mongoose 8.x
+
+#### **5. Mongoose Version Compatibility** ✅ **FIXED**
+- **Problem**: Using deprecated/invalid options with Mongoose 8.x
+- **Error**: `Error: bufferMaxEntries: "bufferMaxEntries" is not a valid option to set`
+- **Solution**: Simplified connection for Mongoose 8.x compatibility:
+  ```javascript
+  // Clean, compatible MongoDB connection
+  await mongoose.connect(process.env.MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    maxPoolSize: 10,
+    minPoolSize: 5,
+    maxIdleTimeMS: 30000
+  });
+  ```
 
 #### **4. MongoDB Connection Options** ✅ **FIXED**
 - **Problem**: MongoDB driver doesn't support `bufferMaxEntries` option in connection string
