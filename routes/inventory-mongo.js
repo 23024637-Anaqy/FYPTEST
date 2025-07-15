@@ -5,6 +5,27 @@ const { authenticateToken, requireRole } = require('../middleware/auth');
 const createInventoryRoutes = () => {
     const router = express.Router();
 
+    // Test endpoint to verify deployment
+    router.get('/test', (req, res) => {
+        console.log('Inventory test endpoint called');
+        res.json({ 
+            message: 'Inventory routes working', 
+            timestamp: new Date().toISOString(),
+            deployment: 'updated-test' 
+        });
+    });
+
+    // Debug endpoint to test authentication without role check
+    router.get('/debug-auth', authenticateToken, (req, res) => {
+        console.log('Inventory debug auth endpoint called');
+        console.log('User from JWT:', JSON.stringify(req.user, null, 2));
+        res.json({ 
+            message: 'Inventory authentication working',
+            user: req.user,
+            timestamp: new Date().toISOString() 
+        });
+    });
+
     // Get all products
     router.get('/products', authenticateToken, async (req, res) => {
         try {
