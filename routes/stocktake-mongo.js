@@ -18,9 +18,15 @@ const createStocktakeRoutes = () => {
     // Get all stocktake sessions
     router.get('/sessions', authenticateToken, requireRole('admin', 'supervisor'), async (req, res) => {
         try {
-            // Debug: Log user information from JWT token
-            console.log('Stocktake sessions request from user:', req.user);
-            console.log('User role from JWT:', req.user?.role);
+            // Enhanced debug: Log detailed information
+            console.log('=== STOCKTAKE SESSIONS REQUEST ===');
+            console.log('Request headers:', req.headers);
+            console.log('Auth header:', req.headers.authorization);
+            console.log('User from JWT:', JSON.stringify(req.user, null, 2));
+            console.log('User role:', req.user?.role);
+            console.log('Required roles: admin, supervisor');
+            console.log('Role check result:', ['admin', 'supervisor'].includes(req.user?.role));
+            console.log('=================================');
             
             const { status, location_id } = req.query;
 
@@ -401,6 +407,16 @@ const createStocktakeRoutes = () => {
             console.error('Get stocktake variances error:', error);
             res.status(500).json({ error: 'Internal server error' });
         }
+    });
+
+    // Test endpoint to verify deployment
+    router.get('/test', (req, res) => {
+        console.log('Stocktake test endpoint called');
+        res.json({ 
+            message: 'Stocktake routes working', 
+            timestamp: new Date().toISOString(),
+            deployment: 'updated-with-debug' 
+        });
     });
 
     console.log('Stocktake router created with routes:', router.stack?.length || 'unknown');
