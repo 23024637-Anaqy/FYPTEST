@@ -11,6 +11,13 @@ const createInventoryRoutes = require('../routes/inventory-mongo');
 const createStocktakeRoutes = require('../routes/stocktake-mongo');
 const createReportsRoutes = require('../routes/reports-mongo');
 
+console.log('Route modules loaded:', {
+    auth: typeof createAuthRoutes,
+    inventory: typeof createInventoryRoutes,
+    stocktake: typeof createStocktakeRoutes,
+    reports: typeof createReportsRoutes
+});
+
 const app = express();
 
 // Initialize MongoDB connection for Vercel serverless
@@ -89,10 +96,15 @@ app.get('/api/health', (req, res) => {
 });
 
 // API Routes
+console.log('Mounting API routes...');
 app.use('/api/auth', createAuthRoutes());
+console.log('Auth routes mounted');
 app.use('/api/inventory', createInventoryRoutes());
+console.log('Inventory routes mounted');
 app.use('/api/stocktake', createStocktakeRoutes());
+console.log('Stocktake routes mounted');
 app.use('/api/reports', createReportsRoutes());
+console.log('Reports routes mounted');
 
 // Serve static files (fixed path for Vercel)
 app.use(express.static(path.join(__dirname, '../public')));

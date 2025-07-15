@@ -2,8 +2,18 @@ const express = require('express');
 const { StocktakeSession, StocktakeDetail, Product, Location, Stock, AuditLog } = require('../models');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 
+console.log('Stocktake routes module loaded. Models available:', {
+    StocktakeSession: !!StocktakeSession,
+    StocktakeDetail: !!StocktakeDetail,
+    Product: !!Product,
+    Location: !!Location,
+    Stock: !!Stock,
+    AuditLog: !!AuditLog
+});
+
 const createStocktakeRoutes = () => {
     const router = express.Router();
+    console.log('Creating stocktake router...');
 
     // Get all stocktake sessions
     router.get('/sessions', authenticateToken, requireRole(['admin', 'supervisor']), async (req, res) => {
@@ -393,6 +403,7 @@ const createStocktakeRoutes = () => {
         }
     });
 
+    console.log('Stocktake router created with routes:', router.stack?.length || 'unknown');
     return router;
 };
 
