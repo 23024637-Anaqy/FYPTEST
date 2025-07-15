@@ -448,6 +448,16 @@ const createStocktakeRoutes = () => {
         });
     });
 
+    // Test endpoint to verify latest deployment timestamp
+    router.get('/deployment-test', (req, res) => {
+        res.json({ 
+            message: 'Latest deployment test', 
+            timestamp: new Date().toISOString(),
+            deploymentTime: Date.now(),
+            version: 'role-check-removed' 
+        });
+    });
+
     console.log('Stocktake router created with routes:', router.stack?.length || 'unknown');
     return router;
 };
