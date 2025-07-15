@@ -409,6 +409,17 @@ const createStocktakeRoutes = () => {
         }
     });
 
+    // Debug endpoint to test authentication without role check
+    router.get('/debug-auth', authenticateToken, (req, res) => {
+        console.log('Debug auth endpoint called');
+        console.log('User from JWT:', JSON.stringify(req.user, null, 2));
+        res.json({ 
+            message: 'Authentication working',
+            user: req.user,
+            timestamp: new Date().toISOString() 
+        });
+    });
+
     // Test endpoint to verify deployment
     router.get('/test', (req, res) => {
         console.log('Stocktake test endpoint called');
@@ -416,6 +427,24 @@ const createStocktakeRoutes = () => {
             message: 'Stocktake routes working', 
             timestamp: new Date().toISOString(),
             deployment: 'updated-with-debug' 
+        });
+    });
+
+    // Debug endpoint to manually test role checking
+    router.get('/debug-role', authenticateToken, (req, res) => {
+        console.log('Debug role endpoint called');
+        console.log('User role:', req.user?.role);
+        console.log('Is admin?', req.user?.role === 'admin');
+        console.log('Is supervisor?', req.user?.role === 'supervisor');
+        console.log('Role check with includes:', ['admin', 'supervisor'].includes(req.user?.role));
+        
+        res.json({ 
+            message: 'Role check debug',
+            userRole: req.user?.role,
+            isAdmin: req.user?.role === 'admin',
+            isSupervisor: req.user?.role === 'supervisor',
+            hasAccess: ['admin', 'supervisor'].includes(req.user?.role),
+            timestamp: new Date().toISOString() 
         });
     });
 
