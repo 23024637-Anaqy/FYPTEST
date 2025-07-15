@@ -8,6 +8,10 @@ const createStocktakeRoutes = () => {
     // Get all stocktake sessions
     router.get('/sessions', authenticateToken, requireRole(['admin', 'supervisor']), async (req, res) => {
         try {
+            // Debug: Log user information from JWT token
+            console.log('Stocktake sessions request from user:', req.user);
+            console.log('User role from JWT:', req.user?.role);
+            
             const { status, location_id } = req.query;
 
             let filter = {};

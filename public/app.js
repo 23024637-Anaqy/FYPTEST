@@ -963,6 +963,18 @@ async function loadStocktakeData() {
     console.log('loadStocktakeData called. Current user:', currentUser);
     console.log('User role:', currentUser?.role);
     
+    // Debug: Check JWT token contents
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            console.log('JWT token payload:', payload);
+            console.log('JWT token role:', payload.role);
+        } catch (e) {
+            console.log('Error parsing JWT token:', e);
+        }
+    }
+    
     if (currentUser.role === 'user') {
         console.log('User role is "user", showing restricted message');
         document.getElementById('stocktakeContainer').innerHTML = 

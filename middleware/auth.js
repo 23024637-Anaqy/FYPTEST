@@ -21,13 +21,22 @@ const authenticateToken = (req, res, next) => {
 const requireRole = (...roles) => {
     return (req, res, next) => {
         if (!req.user) {
+            console.log('requireRole: No user in request');
             return res.status(401).json({ error: 'Authentication required' });
         }
 
+        console.log('requireRole check:', {
+            userRole: req.user.role,
+            requiredRoles: roles,
+            hasPermission: roles.includes(req.user.role)
+        });
+
         if (!roles.includes(req.user.role)) {
+            console.log(`requireRole: Access denied. User role '${req.user.role}' not in allowed roles:`, roles);
             return res.status(403).json({ error: 'Insufficient permissions' });
         }
 
+        console.log('requireRole: Access granted');
         next();
     };
 };
