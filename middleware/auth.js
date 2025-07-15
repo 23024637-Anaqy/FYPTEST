@@ -31,24 +31,42 @@ const authenticateToken = (req, res, next) => {
 };
 
 const requireRole = (...roles) => {
+    console.log('requireRole middleware called with roles:', roles);
+    console.log('roles array length:', roles.length);
+    console.log('roles array contents:', JSON.stringify(roles));
+    
     return (req, res, next) => {
+        console.log('requireRole middleware executing...');
+        
         if (!req.user) {
             console.log('requireRole: No user in request');
             return res.status(401).json({ error: 'Authentication required' });
         }
 
-        console.log('requireRole check:', {
+        console.log('requireRole check DETAILED:', {
             userRole: req.user.role,
+            userRoleType: typeof req.user.role,
             requiredRoles: roles,
-            hasPermission: roles.includes(req.user.role)
+            requiredRolesType: typeof roles,
+            requiredRolesLength: roles.length,
+            includesCheck: roles.includes(req.user.role),
+            isAdmin: req.user.role === 'admin',
+            rolesAsString: roles.join(',')
         });
 
-        if (!roles.includes(req.user.role)) {
-            console.log(`requireRole: Access denied. User role '${req.user.role}' not in allowed roles:`, roles);
+        const hasPermission = roles.includes(req.user.role);
+        console.log('Permission check result:', hasPermission);
+
+        if (!hasPermission) {
+            console.log(`requireRole: ACCESS DENIED. User role '${req.user.role}' not in allowed roles:`, roles);
+            console.log('Exact comparison results:');
+            roles.forEach((role, index) => {
+                console.log(`  Role ${index}: '${role}' === '${req.user.role}' ? ${role === req.user.role}`);
+            });
             return res.status(403).json({ error: 'Insufficient permissions' });
         }
 
-        console.log('requireRole: Access granted');
+        console.log('requireRole: ACCESS GRANTED');
         next();
     };
 };
