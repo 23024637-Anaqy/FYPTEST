@@ -340,7 +340,18 @@ async function loadStockLevels() {
         }
 
         const data = await apiRequest(endpoint);
-        updateStockTable(data);
+        
+        // Transform the data to match the expected format
+        const transformedData = data.map(item => ({
+            product_code: item.product_id?.product_code || 'N/A',
+            product_name: item.product_id?.product_name || 'N/A',
+            location_name: item.location_id?.location_name || 'N/A',
+            current_quantity: item.current_quantity || 0,
+            min_stock_level: item.product_id?.min_stock_level || 0,
+            max_stock_level: item.product_id?.max_stock_level || 0
+        }));
+        
+        updateStockTable(transformedData);
     } catch (error) {
         showError('Failed to load stock levels');
     }
@@ -352,14 +363,34 @@ async function loadTransactions() {
         const startDate = document.getElementById('transactionStartDate').value;
         const endDate = document.getElementById('transactionEndDate').value;
 
-        let endpoint = `/inventory/transactions?page=${currentTransactionPage}&limit=20`;
+        let endpoint = `/inventory/transactions?limit=20&offset=${(currentTransactionPage - 1) * 20}`;
         if (typeFilter) endpoint += `&type=${typeFilter}`;
         if (startDate) endpoint += `&start_date=${startDate}`;
         if (endDate) endpoint += `&end_date=${endDate}`;
 
         const data = await apiRequest(endpoint);
-        updateTransactionTable(data.transactions);
-        updateTransactionPagination(data.pagination);
+        
+        // Transform the transaction data to match the expected format
+        const transformedTransactions = data.transactions.map(transaction => ({
+            transaction_date: transaction.createdAt,
+            transaction_type: transaction.transaction_type,
+            product_name: transaction.product_id?.product_name || 'N/A',
+            quantity: transaction.quantity,
+            from_location_name: transaction.from_location_id?.location_name || null,
+            to_location_name: transaction.to_location_id?.location_name || null,
+            user_name: transaction.user_id?.full_name || transaction.user_id?.username || 'N/A',
+            reference_number: transaction.reference_number
+        }));
+        
+        // Create pagination object from backend response
+        const pagination = {
+            pages: Math.ceil(data.total / data.limit),
+            currentPage: Math.floor(data.offset / data.limit) + 1,
+            total: data.total
+        };
+        
+        updateTransactionTable(transformedTransactions);
+        updateTransactionPagination(pagination);
     } catch (error) {
         showError('Failed to load transactions');
     }
