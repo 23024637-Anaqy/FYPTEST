@@ -15,8 +15,17 @@ const createStocktakeRoutes = () => {
     const router = express.Router();
     console.log('Creating stocktake router...');
 
-    // Get all stocktake sessions
-    router.get('/sessions', authenticateToken, requireRole('admin', 'supervisor'), async (req, res) => {
+    // Get all stocktake sessions - HARDCODED ROLE CHECK FOR TESTING
+    router.get('/sessions', authenticateToken, (req, res, next) => {
+        console.log('HARDCODED role check - User role:', req.user?.role);
+        if (req.user?.role === 'admin' || req.user?.role === 'supervisor') {
+            console.log('HARDCODED role check - ACCESS GRANTED');
+            next();
+        } else {
+            console.log('HARDCODED role check - ACCESS DENIED');
+            return res.status(403).json({ error: 'Insufficient permissions (hardcoded check)' });
+        }
+    }, async (req, res) => {
         try {
             // Enhanced debug: Log detailed information
             console.log('=== STOCKTAKE SESSIONS REQUEST ===');
