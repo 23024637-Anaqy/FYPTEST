@@ -458,6 +458,15 @@ const createStocktakeRoutes = () => {
         });
     });
 
+    // EMERGENCY DEBUG - Complete bypass test
+    router.get('/emergency-test', (req, res) => {
+        res.json({ 
+            message: 'Emergency test - stocktake routes loaded', 
+            timestamp: new Date().toISOString(),
+            middleware_bypass: true 
+        });
+    });
+
     console.log('Stocktake router created with routes:', router.stack?.length || 'unknown');
     return router;
 };
