@@ -283,11 +283,28 @@ async function apiRequest(endpoint, options = {}) {
         ...options
     };
 
+    // Debug: Log request details
+    console.log('API Request:', {
+        endpoint: `${API_BASE}${endpoint}`,
+        hasToken: !!token,
+        tokenLength: token?.length || 0,
+        headers: config.headers
+    });
+
     try {
         const response = await fetch(`${API_BASE}${endpoint}`, config);
+        
+        // Debug: Log response details
+        console.log('API Response:', {
+            status: response.status,
+            statusText: response.statusText,
+            ok: response.ok
+        });
+        
         const data = await response.json();
 
         if (!response.ok) {
+            console.log('API Error response:', data);
             throw new Error(data.error || 'Request failed');
         }
 

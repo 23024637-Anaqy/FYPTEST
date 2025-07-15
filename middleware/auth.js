@@ -1,18 +1,30 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 
+// Debug: Log JWT secret info (without exposing the actual secret)
+console.log('Auth middleware loaded. JWT_SECRET configured:', !!config.JWT_SECRET);
+console.log('JWT_SECRET length:', config.JWT_SECRET?.length || 0);
+
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
+    console.log('authenticateToken: checking token for path:', req.path);
+    console.log('authenticateToken: auth header:', authHeader ? 'present' : 'missing');
+    console.log('authenticateToken: token:', token ? 'present' : 'missing');
+
     if (!token) {
+        console.log('authenticateToken: No token provided');
         return res.status(401).json({ error: 'Access token required' });
     }
 
     jwt.verify(token, config.JWT_SECRET, (err, user) => {
         if (err) {
+            console.log('authenticateToken: JWT verification failed:', err.message);
             return res.status(403).json({ error: 'Invalid or expired token' });
         }
+        
+        console.log('authenticateToken: JWT verified successfully. User:', user);
         req.user = user;
         next();
     });
