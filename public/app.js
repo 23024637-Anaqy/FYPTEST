@@ -1,6 +1,9 @@
 // API Base URL
 const API_BASE = '/api';
 
+// Debug: Check if updated version is loaded
+console.log('Lakers Inventory App - Data Transform Fix v2.0 loaded at:', new Date().toISOString());
+
 // Global state
 let currentUser = null;
 let isLoading = false;
@@ -341,6 +344,9 @@ async function loadStockLevels() {
 
         const data = await apiRequest(endpoint);
         
+        // Debug: Log the raw data from API
+        console.log('Raw stock data from API:', data);
+        
         // Transform the data to match the expected format
         const transformedData = data.map(item => ({
             product_code: item.product_id?.product_code || 'N/A',
@@ -350,6 +356,9 @@ async function loadStockLevels() {
             min_stock_level: item.product_id?.min_stock_level || 0,
             max_stock_level: item.product_id?.max_stock_level || 0
         }));
+        
+        // Debug: Log the transformed data
+        console.log('Transformed stock data:', transformedData);
         
         updateStockTable(transformedData);
     } catch (error) {
