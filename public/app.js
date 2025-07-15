@@ -959,16 +959,23 @@ function displayTransactionSummaryReport(container, data) {
 
 // Stocktake functions (simplified version for basic users)
 async function loadStocktakeData() {
+    // Debug: Log current user information
+    console.log('loadStocktakeData called. Current user:', currentUser);
+    console.log('User role:', currentUser?.role);
+    
     if (currentUser.role === 'user') {
+        console.log('User role is "user", showing restricted message');
         document.getElementById('stocktakeContainer').innerHTML = 
             '<p class="text-center">Stocktake functionality is available to supervisors and administrators only.</p>';
         return;
     }
 
+    console.log('User has elevated role, attempting to load stocktake sessions...');
     try {
         const sessions = await apiRequest('/stocktake/sessions');
         displayStocktakeSessions(sessions);
     } catch (error) {
+        console.error('Stocktake API error:', error);
         showError('Failed to load stocktake data');
     }
 }
