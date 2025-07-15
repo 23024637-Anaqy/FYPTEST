@@ -1,4 +1,5 @@
 {
+  "_comment": "Force rebuild 2025-07-15",
   "version": 2,
   "functions": {
     "api/*.js": {
