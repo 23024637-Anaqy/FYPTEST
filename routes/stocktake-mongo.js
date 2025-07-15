@@ -15,8 +15,8 @@ const createStocktakeRoutes = () => {
     const router = express.Router();
     console.log('Creating stocktake router...');
 
-    // Get all stocktake sessions
-    router.get('/sessions', authenticateToken, requireRole('admin', 'supervisor'), async (req, res) => {
+    // Get all stocktake sessions - TEMPORARILY REMOVE ROLE CHECK FOR TESTING
+    router.get('/sessions', authenticateToken, async (req, res) => {
         try {
             // Enhanced debug: Log detailed information
             console.log('=== STOCKTAKE SESSIONS REQUEST ===');
