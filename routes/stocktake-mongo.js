@@ -16,7 +16,7 @@ const createStocktakeRoutes = () => {
     console.log('Creating stocktake router...');
 
     // Get all stocktake sessions
-    router.get('/sessions', authenticateToken, requireRole(['admin', 'supervisor']), async (req, res) => {
+    router.get('/sessions', authenticateToken, requireRole('admin', 'supervisor'), async (req, res) => {
         try {
             // Debug: Log user information from JWT token
             console.log('Stocktake sessions request from user:', req.user);
@@ -41,7 +41,7 @@ const createStocktakeRoutes = () => {
     });
 
     // Create new stocktake session
-    router.post('/sessions', authenticateToken, requireRole(['admin', 'supervisor']), async (req, res) => {
+    router.post('/sessions', authenticateToken, requireRole('admin', 'supervisor'), async (req, res) => {
         try {
             const { location_id, description } = req.body;
 
@@ -118,7 +118,7 @@ const createStocktakeRoutes = () => {
     });
 
     // Get stocktake session details
-    router.get('/sessions/:id', authenticateToken, requireRole(['admin', 'supervisor']), async (req, res) => {
+    router.get('/sessions/:id', authenticateToken, requireRole('admin', 'supervisor'), async (req, res) => {
         try {
             const { id } = req.params;
 
@@ -214,7 +214,7 @@ const createStocktakeRoutes = () => {
     });
 
     // Complete stocktake session
-    router.post('/sessions/:id/complete', authenticateToken, requireRole(['admin', 'supervisor']), async (req, res) => {
+    router.post('/sessions/:id/complete', authenticateToken, requireRole('admin', 'supervisor'), async (req, res) => {
         try {
             const { id } = req.params;
             const { apply_adjustments = false } = req.body;
@@ -303,7 +303,7 @@ const createStocktakeRoutes = () => {
     });
 
     // Cancel stocktake session
-    router.post('/sessions/:id/cancel', authenticateToken, requireRole(['admin', 'supervisor']), async (req, res) => {
+    router.post('/sessions/:id/cancel', authenticateToken, requireRole('admin', 'supervisor'), async (req, res) => {
         try {
             const { id } = req.params;
             const { reason } = req.body;
@@ -346,7 +346,7 @@ const createStocktakeRoutes = () => {
     });
 
     // Get stocktake variances report
-    router.get('/sessions/:id/variances', authenticateToken, requireRole(['admin', 'supervisor']), async (req, res) => {
+    router.get('/sessions/:id/variances', authenticateToken, requireRole('admin', 'supervisor'), async (req, res) => {
         try {
             const { id } = req.params;
 

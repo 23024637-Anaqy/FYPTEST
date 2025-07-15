@@ -363,7 +363,7 @@ const createReportsRoutes = () => {
     });
 
     // User activity report
-    router.get('/user-activity', authenticateToken, requireRole(['admin', 'supervisor']), async (req, res) => {
+    router.get('/user-activity', authenticateToken, requireRole('admin', 'supervisor'), async (req, res) => {
         try {
             const { start_date, end_date, user_id, action } = req.query;
 
@@ -506,7 +506,7 @@ const createReportsRoutes = () => {
     });
 
     // Stocktake variance report
-    router.get('/stocktake-variances', authenticateToken, requireRole(['admin', 'supervisor']), async (req, res) => {
+    router.get('/stocktake-variances', authenticateToken, requireRole('admin', 'supervisor'), async (req, res) => {
         try {
             const { session_id, start_date, end_date } = req.query;
 
